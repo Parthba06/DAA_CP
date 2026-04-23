@@ -12,10 +12,10 @@ function initGraph(containerId, customers, warehouses, distanceMatrix) {
     const nodes = new vis.DataSet();
     const edges = new vis.DataSet();
 
-    // Position customers on the left, warehouses on the right
     const cCount = customers.length;
     const wCount = warehouses.length;
-    const spacing = 120;
+    const maxCount = Math.max(cCount, wCount);
+    const spacing = Math.max(80, Math.min(140, 600 / maxCount));
 
     customers.forEach((c, i) => {
         nodes.add({
@@ -25,7 +25,7 @@ function initGraph(containerId, customers, warehouses, distanceMatrix) {
             size: 22 + c.orderSize * 2,
             color: { background: '#4A90D9', border: '#2a6cb8', highlight: { background: '#3178c6', border: '#1a5096' } },
             font: { color: '#333', size: 11, face: 'Inter', multi: true },
-            x: -200,
+            x: -250,
             y: (i - (cCount - 1) / 2) * spacing,
             shadow: { enabled: true, size: 8, color: 'rgba(74,144,217,0.3)' }
         });
@@ -38,27 +38,24 @@ function initGraph(containerId, customers, warehouses, distanceMatrix) {
             shape: 'box',
             size: 25,
             color: { background: '#0c831f', border: '#064d13', highlight: { background: '#0a6d18', border: '#043d0f' } },
-            font: { color: 'white', size: 11, face: 'Inter', multi: true },
-            x: 200,
+            font: { color: 'white', size: 10, face: 'Inter', multi: true },
+            x: 250,
             y: (j - (wCount - 1) / 2) * spacing,
             shadow: { enabled: true, size: 8, color: 'rgba(12,131,31,0.3)' },
-            borderWidth: 2,
-            borderWidthSelected: 3
+            borderWidth: 2, borderWidthSelected: 3
         });
     });
 
-    // Add edges
     for (let i = 0; i < cCount; i++) {
         for (let j = 0; j < wCount; j++) {
             edges.add({
                 id: `e${i}_${j}`,
-                from: `c${customers[i].id}`,
-                to: `w${warehouses[j].id}`,
+                from: `c${customers[i].id}`, to: `w${warehouses[j].id}`,
                 label: `${distanceMatrix[i][j]} min`,
                 color: { color: '#ddd', highlight: '#0c831f', opacity: 0.5 },
-                font: { size: 9, color: '#999', strokeWidth: 2, strokeColor: '#fff' },
+                font: { size: 8, color: '#999', strokeWidth: 2, strokeColor: '#fff' },
                 width: 1,
-                smooth: { type: 'curvedCW', roundness: 0.1 * (j - i) },
+                smooth: { type: 'curvedCW', roundness: 0.05 + 0.04 * (j - i) },
                 arrows: { to: { enabled: false } }
             });
         }
@@ -70,9 +67,7 @@ function initGraph(containerId, customers, warehouses, distanceMatrix) {
         layout: { randomSeed: 42 }
     };
 
-    if (network && containerId === 'network-graph') {
-        network.destroy();
-    }
+    if (network && containerId === 'network-graph') { network.destroy(); }
 
     const net = new vis.Network(container, { nodes, edges }, options);
 
@@ -82,36 +77,24 @@ function initGraph(containerId, customers, warehouses, distanceMatrix) {
         network.edgesDS = edges;
     }
 
+    setTimeout(() => net.fit({ animation: { duration: 400, easingFunction: 'easeInOutQuad' } }), 100);
     return net;
 }
 
 function highlightAssignments(assignments, customers, warehouses) {
     if (!network || !network.edgesDS) return;
-
-    // Reset all edges
     const allEdges = network.edgesDS.get();
     allEdges.forEach(e => {
-        network.edgesDS.update({
-            id: e.id,
-            color: { color: '#e0e0e0', opacity: 0.3 },
-            width: 1,
-            arrows: { to: { enabled: false } },
-            dashes: false
-        });
+        network.edgesDS.update({ id: e.id, color: { color: '#e0e0e0', opacity: 0.3 }, width: 1, arrows: { to: { enabled: false } }, dashes: false });
     });
-
-    // Highlight assigned routes
     assignments.forEach((a, idx) => {
         const edgeId = `e${a.customerId}_${a.warehouseId}`;
         const edge = network.edgesDS.get(edgeId);
         if (edge) {
             setTimeout(() => {
                 network.edgesDS.update({
-                    id: edgeId,
-                    color: { color: '#0c831f', opacity: 1 },
-                    width: 3,
-                    arrows: { to: { enabled: true, scaleFactor: 0.6 } },
-                    dashes: false,
+                    id: edgeId, color: { color: '#0c831f', opacity: 1 }, width: 3,
+                    arrows: { to: { enabled: true, scaleFactor: 0.6 } }, dashes: false,
                     shadow: { enabled: true, color: 'rgba(12,131,31,0.4)', size: 6 }
                 });
             }, idx * 150);
@@ -122,7 +105,6 @@ function highlightAssignments(assignments, customers, warehouses) {
 function initHeroGraph() {
     const container = document.getElementById('hero-graph');
     if (!container) return;
-
     const nodes = new vis.DataSet([
         { id: 1, label: '📦 Order 1', shape: 'dot', size: 18, color: { background: '#4A90D9', border: '#2a6cb8' }, font: { color: '#333', size: 10 }, x: -150, y: -80 },
         { id: 2, label: '📦 Order 2', shape: 'dot', size: 15, color: { background: '#4A90D9', border: '#2a6cb8' }, font: { color: '#333', size: 10 }, x: -150, y: 0 },
@@ -138,7 +120,6 @@ function initHeroGraph() {
         { from: 1, to: 5, color: { color: '#ddd' }, width: 1, dashes: true, label: '12 min', font: { size: 9, color: '#aaa' } },
         { from: 2, to: 4, color: { color: '#ddd' }, width: 1, dashes: true, label: '10 min', font: { size: 9, color: '#aaa' } }
     ]);
-
     heroNetwork = new vis.Network(container, { nodes, edges }, {
         physics: { enabled: false },
         interaction: { dragNodes: false, dragView: false, zoomView: false }

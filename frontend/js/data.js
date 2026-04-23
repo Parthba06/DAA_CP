@@ -42,7 +42,7 @@ const STAGE_COLORS = {
 
 const SampleData = {
     small: {
-        label: 'Small (4 customers, 3 warehouses)',
+        label: 'Standard (4 customers, 6 warehouses)',
         customers: [
             { id: 0, name: 'Customer A', orderSize: 3 },
             { id: 1, name: 'Customer B', orderSize: 2 },
@@ -50,12 +50,18 @@ const SampleData = {
             { id: 3, name: 'Customer D', orderSize: 1 }
         ],
         warehouses: [
-            { id: 0, name: 'FreshMart Central', capacity: 8 },
-            { id: 1, name: 'QuickStore Hub', capacity: 6 },
-            { id: 2, name: 'SpeedyMart Depot', capacity: 7 }
+            { id: 0, name: 'QuickStore Hub', capacity: 10 },
+            { id: 1, name: 'FreshMart Central', capacity: 8 },
+            { id: 2, name: 'SpeedyMart Depot', capacity: 9 },
+            { id: 3, name: 'UrbanBasket Store', capacity: 7 },
+            { id: 4, name: 'DailyNeeds Hub', capacity: 11 },
+            { id: 5, name: 'ExpressMart Point', capacity: 6 }
         ],
         distanceMatrix: [
-            [5, 12, 8], [10, 3, 7], [8, 6, 4], [15, 9, 11]
+            [3, 9, 14, 7, 11, 5],
+            [12, 4, 6, 10, 3, 8],
+            [7, 11, 3, 5, 9, 13],
+            [15, 6, 10, 2, 8, 4]
         ]
     }
 };

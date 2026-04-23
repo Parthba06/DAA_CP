@@ -2,24 +2,36 @@
   "bestStrategy": "fast",
   "shortestPaths": [
     [
-      5.0,
+      3.0,
+      9.0,
+      13.0,
+      7.0,
+      11.0,
+      5.0
+    ],
+    [
       12.0,
+      4.0,
+      6.0,
+      10.0,
+      3.0,
       8.0
     ],
     [
-      10.0,
+      7.0,
+      11.0,
       3.0,
-      7.0
-    ],
-    [
-      8.0,
-      6.0,
-      4.0
-    ],
-    [
-      15.0,
+      5.0,
       9.0,
       11.0
+    ],
+    [
+      12.0,
+      6.0,
+      10.0,
+      2.0,
+      8.0,
+      4.0
     ]
   ],
   "strategies": {
@@ -28,111 +40,120 @@
         {
           "customerId": 0,
           "orderSize": 3,
-          "time": 5.0,
+          "time": 3.0,
           "warehouseId": 0
         },
         {
           "customerId": 1,
           "orderSize": 2,
           "time": 3.0,
-          "warehouseId": 1
+          "warehouseId": 4
         },
         {
           "customerId": 2,
           "orderSize": 5,
-          "time": 4.0,
+          "time": 3.0,
           "warehouseId": 2
         },
         {
           "customerId": 3,
           "orderSize": 1,
-          "time": 9.0,
-          "warehouseId": 1
+          "time": 2.0,
+          "warehouseId": 3
         }
       ],
-      "efficiency": 86.63,
+      "efficiency": 81.59,
       "feasible": true,
       "loadDistribution": [
         3.0,
-        3.0,
-        5.0
+        0.0,
+        5.0,
+        1.0,
+        2.0,
+        0.0
       ],
       "maxLoad": 5.0,
-      "totalTime": 21.0
+      "totalTime": 11.0
     },
     "fast": {
       "assignments": [
         {
           "customerId": 0,
           "orderSize": 3,
-          "time": 5.0,
+          "time": 3.0,
           "warehouseId": 0
         },
         {
           "customerId": 1,
           "orderSize": 2,
           "time": 3.0,
-          "warehouseId": 1
+          "warehouseId": 4
         },
         {
           "customerId": 2,
           "orderSize": 5,
-          "time": 4.0,
+          "time": 3.0,
           "warehouseId": 2
         },
         {
           "customerId": 3,
           "orderSize": 1,
-          "time": 9.0,
-          "warehouseId": 1
+          "time": 2.0,
+          "warehouseId": 3
         }
       ],
-      "efficiency": 86.63,
+      "efficiency": 81.59,
       "feasible": true,
       "loadDistribution": [
         3.0,
-        3.0,
-        5.0
+        0.0,
+        5.0,
+        1.0,
+        2.0,
+        0.0
       ],
       "maxLoad": 5.0,
-      "totalTime": 21.0
+      "totalTime": 11.0
     },
     "optimal": {
       "assignments": [
         {
           "customerId": 0,
           "orderSize": 3,
-          "time": 5.0,
+          "time": 3.0,
           "warehouseId": 0
         },
         {
           "customerId": 1,
           "orderSize": 2,
           "time": 3.0,
-          "warehouseId": 1
+          "warehouseId": 4
         },
         {
           "customerId": 2,
           "orderSize": 5,
-          "time": 4.0,
+          "time": 3.0,
           "warehouseId": 2
         },
         {
           "customerId": 3,
           "orderSize": 1,
-          "time": 9.0,
-          "warehouseId": 1
+          "time": 2.0,
+          "warehouseId": 3
         }
       ],
-      "efficiency": 86.63,
+      "efficiency": 81.59,
       "feasible": true,
       "loadDistribution": [
         3.0,
-        3.0,
-        5.0
+        0.0,
+        5.0,
+        1.0,
+        2.0,
+        0.0
       ],
       "maxLoad": 5.0,
-      "totalTime": 21.0
+      "totalTime": 11.0
     }
   }
 }

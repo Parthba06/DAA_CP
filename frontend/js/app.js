@@ -155,7 +155,7 @@ async function placeOrder() {
             body: JSON.stringify({
                 items: cart.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity, emoji: i.emoji })),
                 customerName: 'Customer',
-                customerZone: Math.floor(Math.random() * 3),
+                customerZone: Math.floor(Math.random() * 6),
                 strategy: document.getElementById('order-strategy').value
             })
         });
