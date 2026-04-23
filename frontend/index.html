@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Smart Delivery Optimizer - Blinkit-style quick commerce simulation">
+    <title>Smart Delivery Optimizer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-brand">
+            <div class="nav-logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <rect width="32" height="32" rx="8" fill="#0c831f"/>
+                    <path d="M8 16L14 10L20 16L14 22Z" fill="white" opacity="0.9"/>
+                    <path d="M14 16L20 10L26 16L20 22Z" fill="white" opacity="0.6"/>
+                    <circle cx="16" cy="16" r="3" fill="#f8cb46"/>
+                </svg>
+            </div>
+            <span class="nav-title">Smart Delivery</span>
+        </div>
+        <div class="nav-links">
+            <button class="nav-link active" data-page="home" id="nav-home">🏠 Home</button>
+            <button class="nav-link" data-page="order" id="nav-order">🛒 Order</button>
+            <button class="nav-link" data-page="live" id="nav-live">📡 Live</button>
+            <button class="nav-link" data-page="stores" id="nav-stores">🏭 Stores</button>
+            <button class="nav-link" data-page="partners" id="nav-partners">🛵 Partners</button>
+            <button class="nav-link" data-page="analytics" id="nav-analytics">📊 Analytics</button>
+        </div>
+        <div class="nav-right">
+            <div class="cart-icon" id="cart-icon-nav" onclick="navigateTo('order')">
+                🛒 <span class="cart-badge" id="cart-badge-nav" style="display:none">0</span>
+            </div>
+            <div class="nav-status">
+                <div class="status-dot" id="server-status"></div>
+                <span class="status-text" id="server-status-text">...</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ═══════════════ HOME PAGE ═══════════════ -->
+    <section class="page active" id="page-home">
+        <div class="hero">
+            <div class="hero-content">
+                <div class="hero-badge">🚀 Quick Commerce Simulator</div>
+                <h1 class="hero-title">Order Groceries,<br><span class="text-gradient">Delivered in Minutes</span></h1>
+                <p class="hero-subtitle">Experience how smart algorithms optimize every delivery — from store selection to rider assignment. Powered by C++ backend.</p>
+                <div class="hero-actions">
+                    <button class="btn btn-primary btn-lg" onclick="navigateTo('order')">🛒 Start Ordering</button>
+                    <button class="btn btn-outline btn-lg" onclick="navigateTo('analytics')">📊 View Analytics</button>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-flow">
+                    <div class="flow-step"><span class="flow-icon">🛒</span><span>Order</span></div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step"><span class="flow-icon">🏭</span><span>Store</span></div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step"><span class="flow-icon">🛵</span><span>Rider</span></div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step active"><span class="flow-icon">✅</span><span>Delivered</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="features-section">
+            <div class="features-grid">
+                <div class="feature-card" style="--delay:0s"><div class="feature-icon" style="background:linear-gradient(135deg,#0c831f,#1db954)">⚡</div><h3>Lightning Fast</h3><p>C++ algorithms process orders in milliseconds</p></div>
+                <div class="feature-card" style="--delay:.1s"><div class="feature-icon" style="background:linear-gradient(135deg,#4A90D9,#00BCD4)">📊</div><h3>Live Tracking</h3><p>Watch your order move through the delivery chain</p></div>
+                <div class="feature-card" style="--delay:.2s"><div class="feature-icon" style="background:linear-gradient(135deg,#f8cb46,#ff9800)">🎯</div><h3>Smart Routing</h3><p>Optimal store & rider assignment every time</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ ORDER PAGE ═══════════════ -->
+    <section class="page" id="page-order">
+        <div class="order-layout">
+            <div class="order-main">
+                <div class="order-header">
+                    <h1>🛒 Order Groceries</h1>
+                    <div class="category-tabs" id="category-tabs"></div>
+                </div>
+                <div class="product-grid" id="product-grid"></div>
+            </div>
+            <aside class="cart-panel" id="cart-panel">
+                <div class="cart-header">
+                    <h2>🛒 Your Cart</h2>
+                    <span class="cart-count" id="cart-count">0 items</span>
+                </div>
+                <div class="cart-items" id="cart-items">
+                    <div class="cart-empty" id="cart-empty">
+                        <p>Your cart is empty</p>
+                        <span>Add items to get started</span>
+                    </div>
+                </div>
+                <div class="cart-footer" id="cart-footer" style="display:none">
+                    <div class="cart-total">
+                        <span>Total</span>
+                        <span class="cart-total-value" id="cart-total">₹0</span>
+                    </div>
+                    <div class="strategy-select">
+                        <label>Delivery Mode:</label>
+                        <select id="order-strategy">
+                            <option value="optimal">🎯 Optimal</option>
+                            <option value="fast">⚡ Fast</option>
+                            <option value="balanced">⚖️ Balanced</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary btn-lg btn-block" id="btn-place-order">
+                        Place Order →
+                    </button>
+                </div>
+            </aside>
+        </div>
+    </section>
+
+    <!-- ═══════════════ LIVE SIMULATION PAGE ═══════════════ -->
+    <section class="page" id="page-live">
+        <div class="sim-layout">
+            <!-- LEFT: Order list + controls -->
+            <div class="sim-sidebar">
+                <h2>📡 Orders</h2>
+                <div class="live-orders" id="live-orders">
+                    <div class="empty-state" id="live-empty">
+                        <p>📦 No orders yet</p>
+                        <button class="btn btn-primary btn-sm" onclick="navigateTo('order')" style="margin-top:10px">Order Now</button>
+                    </div>
+                </div>
+            </div>
+            <!-- CENTER: Full simulation graph -->
+            <div class="sim-center">
+                <div class="sim-status-bar" id="sim-status-bar">
+                    <span class="sim-status-text" id="sim-status-text">Place an order to begin simulation</span>
+                    <div class="sim-progress" id="sim-progress" style="display:none">
+                        <div class="sim-progress-fill" id="sim-progress-fill"></div>
+                    </div>
+                </div>
+                <div id="sim-graph" class="sim-graph"></div>
+                <div class="sim-legend">
+                    <span>🔵 Customer</span>
+                    <span>🟢 Store</span>
+                    <span>🟠 Rider</span>
+                    <span style="color:#0c831f;font-weight:600">── Selection</span>
+                    <span style="color:#ff9800;font-weight:600">── Pickup</span>
+                    <span style="color:#4A90D9;font-weight:600">── Delivery</span>
+                </div>
+            </div>
+            <!-- RIGHT: Decision steps detail -->
+            <div class="sim-detail" id="sim-detail" style="display:none">
+                <div class="sim-detail-header">
+                    <h2 id="detail-order-id">ORD-0000</h2>
+                    <span class="stage-badge" id="detail-stage-badge"></span>
+                </div>
+                <div class="sim-steps" id="sim-steps"></div>
+                <div class="sim-info" id="sim-info"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ STORES PAGE ═══════════════ -->
+    <section class="page" id="page-stores">
+        <div class="page-content">
+            <h1>🏭 Warehouse Dashboard</h1>
+            <p class="page-subtitle">Real-time store status and order assignments</p>
+            <div class="stores-grid" id="stores-grid"></div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ PARTNERS PAGE ═══════════════ -->
+    <section class="page" id="page-partners">
+        <div class="page-content">
+            <h1>🛵 Delivery Partners</h1>
+            <p class="page-subtitle">Live partner availability and assignments</p>
+            <div class="partners-grid" id="partners-grid"></div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ ANALYTICS PAGE ═══════════════ -->
+    <section class="page" id="page-analytics">
+        <div class="control-bar">
+            <div class="control-bar-left">
+                <button class="btn btn-primary" id="btn-run-simulation">▶ Run Simulation</button>
+                <button class="btn btn-secondary" id="btn-fast-mode" disabled>⚡ Fast</button>
+                <button class="btn btn-secondary" id="btn-balanced-mode" disabled>⚖️ Balanced</button>
+                <button class="btn btn-secondary" id="btn-optimal-mode" disabled>🎯 Optimal</button>
+                <button class="btn btn-secondary" id="btn-compare-all" disabled>📊 Compare</button>
+            </div>
+            <div class="control-bar-right">
+                <button class="btn btn-ghost" id="btn-sample-data">📋 Sample Data</button>
+                <button class="btn btn-ghost" id="btn-reset">🔄 Reset</button>
+            </div>
+        </div>
+        <div class="simulation-layout">
+            <aside class="panel input-panel" id="input-panel">
+                <div class="panel-header"><h2 class="panel-title">⚙️ Configuration</h2></div>
+                <div class="panel-body">
+                    <div class="input-section">
+                        <div class="section-header"><h3><span class="dot dot-blue"></span> Customers</h3>
+                            <button class="btn btn-sm btn-icon" id="btn-add-customer" title="Add">+</button></div>
+                        <div class="input-list" id="customer-list"></div>
+                    </div>
+                    <div class="input-section">
+                        <div class="section-header"><h3><span class="dot dot-green"></span> Warehouses</h3>
+                            <button class="btn btn-sm btn-icon" id="btn-add-warehouse" title="Add">+</button></div>
+                        <div class="input-list" id="warehouse-list"></div>
+                    </div>
+                    <div class="input-section">
+                        <div class="section-header"><h3><span class="dot dot-yellow"></span> Delivery Time Matrix</h3></div>
+                        <div class="matrix-container" id="matrix-container">
+                            <p class="matrix-hint">Add customers & warehouses first</p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+            <main class="graph-area" id="graph-area">
+                <div class="graph-container">
+                    <div class="graph-overlay" id="graph-overlay">
+                        <div class="graph-placeholder"><p>Run simulation to see the graph</p></div>
+                    </div>
+                    <div id="network-graph" class="network-graph"></div>
+                </div>
+                <div class="graph-legend" id="graph-legend" style="display:none">
+                    <div class="legend-item"><span class="legend-dot" style="background:#4A90D9"></span> Customer</div>
+                    <div class="legend-item"><span class="legend-square" style="background:#0c831f"></span> Warehouse</div>
+                    <div class="legend-item"><span class="legend-line legend-line-active"></span> Assigned</div>
+                </div>
+            </main>
+            <aside class="panel results-panel" id="results-panel">
+                <div class="panel-header"><h2 class="panel-title">📈 Results</h2>
+                    <div class="strategy-badge" id="current-strategy-badge" style="display:none"></div></div>
+                <div class="panel-body">
+                    <div class="results-placeholder" id="results-placeholder"><p>Run simulation to see results</p></div>
+                    <div class="results-content" id="results-content" style="display:none">
+                        <div class="result-summary" id="result-summary">
+                            <div class="summary-card"><span class="summary-label">Total Time</span><span class="summary-value" id="result-total-time">-</span><span class="summary-unit">min</span></div>
+                            <div class="summary-card"><span class="summary-label">Max Load</span><span class="summary-value" id="result-max-load">-</span><span class="summary-unit">units</span></div>
+                            <div class="summary-card"><span class="summary-label">Efficiency</span><span class="summary-value" id="result-efficiency">-</span><span class="summary-unit">%</span></div>
+                        </div>
+                        <h3 class="section-title">Assignments</h3>
+                        <div class="assignment-list" id="assignment-list"></div>
+                        <h3 class="section-title">Load</h3>
+                        <div class="load-bars" id="load-bars"></div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+        <div class="comparison-section" id="comparison-section" style="display:none">
+            <div class="comparison-header"><h2>📊 Strategy Comparison</h2>
+                <div class="best-badge" id="best-badge">⭐ <span id="best-strategy-name">-</span></div></div>
+            <div class="comparison-grid">
+                <div class="strategy-card" id="card-fast"><div class="strategy-card-header fast"><span>⚡ Fast Mode</span></div><div class="strategy-card-body"><div class="metric"><span class="metric-label">Time</span><span class="metric-value" id="fast-time">-</span></div><div class="metric"><span class="metric-label">Load</span><span class="metric-value" id="fast-load">-</span></div><div class="metric"><span class="metric-label">Efficiency</span><span class="metric-value" id="fast-efficiency">-</span></div></div></div>
+                <div class="strategy-card" id="card-balanced"><div class="strategy-card-header balanced"><span>⚖️ Balanced Mode</span></div><div class="strategy-card-body"><div class="metric"><span class="metric-label">Time</span><span class="metric-value" id="balanced-time">-</span></div><div class="metric"><span class="metric-label">Load</span><span class="metric-value" id="balanced-load">-</span></div><div class="metric"><span class="metric-label">Efficiency</span><span class="metric-value" id="balanced-efficiency">-</span></div></div></div>
+                <div class="strategy-card" id="card-optimal"><div class="strategy-card-header optimal"><span>🎯 Optimal Mode</span></div><div class="strategy-card-body"><div class="metric"><span class="metric-label">Time</span><span class="metric-value" id="optimal-time">-</span></div><div class="metric"><span class="metric-label">Load</span><span class="metric-value" id="optimal-load">-</span></div><div class="metric"><span class="metric-label">Efficiency</span><span class="metric-value" id="optimal-efficiency">-</span></div></div></div>
+            </div>
+            <div class="charts-row">
+                <div class="chart-card"><h3>Delivery Time</h3><canvas id="chart-time"></canvas></div>
+                <div class="chart-card"><h3>Load Distribution</h3><canvas id="chart-load"></canvas></div>
+                <div class="chart-card"><h3>Efficiency</h3><canvas id="chart-efficiency"></canvas></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TOAST & LOADING -->
+    <div class="toast-container" id="toast-container"></div>
+    <div class="loading-overlay" id="loading-overlay" style="display:none">
+        <div class="loading-content"><div class="loading-spinner"></div><p>Processing your order...</p><span class="loading-sub">C++ backend is optimizing</span></div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/graph.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/simulation.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

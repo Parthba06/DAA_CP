@@ -1,0 +1,64 @@
+{
+  "customers": [
+    {
+      "id": 0,
+      "name": "Customer A",
+      "orderSize": 3
+    },
+    {
+      "id": 1,
+      "name": "Customer B",
+      "orderSize": 2
+    },
+    {
+      "id": 2,
+      "name": "Customer C",
+      "orderSize": 5
+    },
+    {
+      "id": 3,
+      "name": "Customer D",
+      "orderSize": 1
+    }
+  ],
+  "warehouses": [
+    {
+      "id": 0,
+      "name": "FreshMart Central",
+      "capacity": 8
+    },
+    {
+      "id": 1,
+      "name": "QuickStore Hub",
+      "capacity": 6
+    },
+    {
+      "id": 2,
+      "name": "SpeedyMart Depot",
+      "capacity": 7
+    }
+  ],
+  "distanceMatrix": [
+    [
+      5,
+      12,
+      8
+    ],
+    [
+      10,
+      3,
+      7
+    ],
+    [
+      8,
+      6,
+      4
+    ],
+    [
+      15,
+      9,
+      11
+    ]
+  ],
+  "mode": "simulate"
+}
