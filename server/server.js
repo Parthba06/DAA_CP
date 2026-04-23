@@ -19,33 +19,49 @@ let orders = [];
 let orderIdCounter = 1000;
 
 const warehouseState = [
-    { id: 0, name: 'FreshMart Central', capacity: 15, currentLoad: 0, orders: [] },
-    { id: 1, name: 'QuickStore Hub', capacity: 12, currentLoad: 0, orders: [] },
-    { id: 2, name: 'SpeedyMart Depot', capacity: 10, currentLoad: 0, orders: [] }
+    { id: 0, name: 'QuickStore Hub', capacity: 18, currentLoad: 0, orders: [] },
+    { id: 1, name: 'FreshMart Central', capacity: 15, currentLoad: 0, orders: [] },
+    { id: 2, name: 'SpeedyMart Depot', capacity: 14, currentLoad: 0, orders: [] },
+    { id: 3, name: 'UrbanBasket Store', capacity: 12, currentLoad: 0, orders: [] },
+    { id: 4, name: 'DailyNeeds Hub', capacity: 16, currentLoad: 0, orders: [] },
+    { id: 5, name: 'ExpressMart Point', capacity: 10, currentLoad: 0, orders: [] }
 ];
 
 const partnerState = [
-    { id: 0, name: 'Rider Amit', nearestWarehouse: 0, status: 'available', currentOrder: null },
+    { id: 0, name: 'Rider Rahul', nearestWarehouse: 0, status: 'available', currentOrder: null },
     { id: 1, name: 'Rider Priya', nearestWarehouse: 1, status: 'available', currentOrder: null },
-    { id: 2, name: 'Rider Rahul', nearestWarehouse: 2, status: 'available', currentOrder: null },
-    { id: 3, name: 'Rider Sneha', nearestWarehouse: 0, status: 'available', currentOrder: null },
-    { id: 4, name: 'Rider Karan', nearestWarehouse: 1, status: 'available', currentOrder: null }
+    { id: 2, name: 'Rider Amit', nearestWarehouse: 2, status: 'available', currentOrder: null },
+    { id: 3, name: 'Rider Sneha', nearestWarehouse: 3, status: 'available', currentOrder: null },
+    { id: 4, name: 'Rider Karan', nearestWarehouse: 0, status: 'available', currentOrder: null },
+    { id: 5, name: 'Rider Neha', nearestWarehouse: 4, status: 'available', currentOrder: null },
+    { id: 6, name: 'Rider Arjun', nearestWarehouse: 5, status: 'available', currentOrder: null },
+    { id: 7, name: 'Rider Kavya', nearestWarehouse: 1, status: 'available', currentOrder: null },
+    { id: 8, name: 'Rider Vikram', nearestWarehouse: 2, status: 'available', currentOrder: null },
+    { id: 9, name: 'Rider Meera', nearestWarehouse: 4, status: 'available', currentOrder: null }
 ];
 
-// Customer-Warehouse distance matrix (3 customer zones x 3 warehouses)
+// Customer-Warehouse distance matrix (6 customer zones x 6 warehouses)
 const custWhDistance = [
-    [3, 8, 12],
-    [7, 4, 6],
-    [10, 5, 3]
+    [3, 9, 14, 7, 11, 5],
+    [12, 4, 6, 10, 3, 8],
+    [7, 11, 3, 5, 9, 13],
+    [15, 6, 10, 2, 8, 4],
+    [5, 13, 8, 11, 4, 9],
+    [10, 3, 7, 14, 6, 2]
 ];
 
-// Partner-Warehouse distance matrix (5 partners x 3 warehouses)
+// Partner-Warehouse distance matrix (10 partners x 6 warehouses)
 const partnerWhDistance = [
-    [2, 9, 11],
-    [8, 2, 7],
-    [12, 6, 2],
-    [3, 10, 9],
-    [9, 3, 8]
+    [2, 10, 13, 8, 12, 6],
+    [11, 2, 7, 9, 5, 10],
+    [14, 8, 2, 6, 11, 9],
+    [9, 12, 5, 3, 7, 13],
+    [3, 7, 11, 10, 14, 4],
+    [8, 14, 9, 11, 2, 7],
+    [6, 9, 12, 14, 8, 2],
+    [13, 3, 8, 7, 10, 11],
+    [10, 6, 3, 12, 9, 5],
+    [7, 11, 10, 4, 3, 8]
 ];
 
 const ORDER_STAGES = ['placed', 'processing', 'warehouse_assigned', 'partner_assigned', 'out_for_delivery', 'delivered'];
@@ -66,7 +82,7 @@ app.post('/api/order', (req, res) => {
     const orderId = 'ORD-' + (orderIdCounter++);
     const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
     const totalPrice = items.reduce((sum, i) => sum + (i.price * i.quantity), 0);
-    const zone = customerZone || Math.floor(Math.random() * 3);
+    const zone = customerZone || Math.floor(Math.random() * 6);
 
     // Build C++ input
     const inputData = {
